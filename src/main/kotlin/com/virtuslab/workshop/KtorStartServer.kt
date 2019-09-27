@@ -20,18 +20,26 @@ class MainModule : Module {
 
     override fun configure(binder: Binder) {
         binder.bind(AppRunner::class.java).asEagerSingleton()
+        binder.bind(AppRouting::class.java)
     }
 }
 
-class AppRunner @Inject constructor() {
+class AppRunner @Inject constructor(val appRouting: AppRouting) {
     init {
         embeddedServer(Netty, 8080)
         {
             routing {
                 get("/") {
-                    call.respondText("Hello Kielce", ContentType.Text.Html)
+                    call.respondText(appRouting.getText(), ContentType.Text.Html)
                 }
             }
         }.start(wait = true)
+    }
+}
+
+class AppRouting @Inject constructor() {
+
+    fun getText(): String {
+        return "Hello Zlota Woda"
     }
 }
