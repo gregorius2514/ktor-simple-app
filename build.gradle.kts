@@ -18,6 +18,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     compile("io.ktor:ktor-server-netty:$ktor_version")
+    compile("com.google.inject:guice:4.2.2")
 }
 
 tasks.withType<KotlinCompile> {
