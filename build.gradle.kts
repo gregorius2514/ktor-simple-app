@@ -1,6 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version = "1.2.4"
+val ktorVersion: String by rootProject
+val kotlinVersion: String by rootProject
+val logbackVersion: String by rootProject
+val guiceVersion: String by rootProject
+val jvmVersion: String by rootProject
 
 
 plugins {
@@ -16,11 +20,12 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    compile("io.ktor:ktor-server-netty:$ktor_version")
-    compile("com.google.inject:guice:4.2.2")
+    implementation(kotlin("stdlib-jdk8:$kotlinVersion"))
+    compile("io.ktor:ktor-server-netty:$ktorVersion")
+    compile("com.google.inject:guice:$guiceVersion")
+    compile("ch.qos.logback:logback-classic:$logbackVersion")
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "$jvmVersion"
 }

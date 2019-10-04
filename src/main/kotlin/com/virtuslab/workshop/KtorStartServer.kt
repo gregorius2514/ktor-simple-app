@@ -1,45 +1,22 @@
 package com.virtuslab.workshop
 
-import com.google.inject.Binder
+import com.google.inject.AbstractModule
 import com.google.inject.Guice
-import com.google.inject.Inject
-import com.google.inject.Module
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
+import io.ktor.application.Application
+import io.ktor.server.engine.commandLineEnvironment
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
 fun main(args: Array<String>) {
-    Guice.createInjector(MainModule())
+    embeddedServer(Netty, commandLineEnvironment(args)).start()
 }
 
-class MainModule : Module {
-
-    override fun configure(binder: Binder) {
-        binder.bind(AppRunner::class.java).asEagerSingleton()
-        binder.bind(AppRouting::class.java)
-    }
+fun Application.module() {
+    Guice.createInjector(MainModule(this), AppRoutes())
 }
 
-class AppRunner @Inject constructor(val appRouting: AppRouting) {
-    init {
-        embeddedServer(Netty, 8080)
-        {
-            routing {
-                get("/") {
-                    call.respondText(appRouting.getText(), ContentType.Text.Html)
-                }
-            }
-        }.start(wait = true)
-    }
-}
-
-class AppRouting @Inject constructor() {
-
-    fun getText(): String {
-        return "Hello Zlota Woda"
+class MainModule(private val application: Application) : AbstractModule() {
+    override fun configure() {
+        bind(Application::class.java).toInstance(application)
     }
 }
