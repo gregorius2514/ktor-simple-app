@@ -14,18 +14,25 @@ plugins {
 group = "com.virtuslab.ktor.workshop"
 version = "1.0"
 
-repositories {
-    jcenter()
-    mavenCentral()
-}
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8:$kotlinVersion"))
-    compile("io.ktor:ktor-server-netty:$ktorVersion")
-    compile("com.google.inject:guice:$guiceVersion")
-    compile("ch.qos.logback:logback-classic:$logbackVersion")
-}
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "$jvmVersion"
+    
+    dependencies {
+        apply(plugin = "java")
+        apply(plugin = "kotlin")
+        
+        implementation(kotlin("stdlib-jdk8:$kotlinVersion"))
+        compile("io.ktor:ktor-server-netty:$ktorVersion")
+        compile("com.google.inject:guice:$guiceVersion")
+        compile("ch.qos.logback:logback-classic:$logbackVersion")
+    }
+
 }
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "$jvmVersion"
+    }

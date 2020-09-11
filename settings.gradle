@@ -1,2 +1,4 @@
 rootProject.name = 'ktor-simple-app'
 
+include 'deployment'
+
