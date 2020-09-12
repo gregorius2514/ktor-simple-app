@@ -11,7 +11,7 @@ plugins {
     kotlin("jvm") version "1.3.50"
 }
 
-group = "com.virtuslab.ktor.workshop"
+group = "com.codefun.ktor.workshop"
 version = "1.0"
 
 

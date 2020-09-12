@@ -1,4 +1,4 @@
-package com.virtuslab.workshop
+package com.codefun.workshop
 
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
