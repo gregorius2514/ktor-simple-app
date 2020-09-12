@@ -1,7 +1,6 @@
 package com.codefun
 
 import io.ktor.features.NotFoundException
-import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -12,14 +11,14 @@ interface UserRepository {
 typealias UserNotFound = NotFoundException
 typealias InvalidUserPassword = IllegalStateException
 
-class UserRepositoryImpl : UserRepository {
+internal class UserRepositoryImpl : UserRepository {
     companion object {
         private val inMemoryDatabase: ConcurrentMap<String, User> = ConcurrentHashMap()
     }
 
-    constructor() {
-        inMemoryDatabase["admin"] = User(
-                id = UUID.randomUUID().toString(),
+    init {
+        inMemoryDatabase["Admin"] = User(
+                id = "1",
                 username = "Admin",
                 password = "Admin123"
         )
