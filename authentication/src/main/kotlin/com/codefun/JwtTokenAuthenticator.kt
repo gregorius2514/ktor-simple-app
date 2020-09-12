@@ -1,16 +1,16 @@
 package com.codefun
 
 interface JwtTokenAuthenticator {
-    fun authenticate(token: String): AuthenticatedState
+    fun authenticate(token: String): AuthenticationState
 }
 
 internal class JwtTokenAuthenticatorImpl : JwtTokenAuthenticator {
-    override fun authenticate(token: String): AuthenticatedState {
+    override fun authenticate(token: String): AuthenticationState {
         TODO("Not yet implemented")
     }
 }
 
-enum class AuthenticatedState {
+enum class AuthenticationState {
     VALID_TOKEN,
     INVALID_TOKEN,
     TOKEN_EXPIRED
