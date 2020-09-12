@@ -1,9 +1,10 @@
 package com.codefun
 
-import com.google.inject.AbstractModule
+import com.google.inject.Binder
+import com.google.inject.Module
 
-class DatabaseModule : AbstractModule() {
-    override fun configure() {
-        bind(UserRepository::class.java).to(UserRepositoryImpl::class.java)
+class DatabaseModule : Module {
+    override fun configure(binder: Binder) {
+        binder.bind(UserRepository::class.java).to(UserRepositoryImpl::class.java)
     }
 }
