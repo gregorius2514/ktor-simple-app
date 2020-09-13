@@ -1,34 +1,34 @@
 package com.codefun
 
+import com.google.inject.Inject
 import io.fusionauth.jwt.Signer
 import io.fusionauth.jwt.domain.JWT
 import io.fusionauth.jwt.hmac.HMACSigner
-import java.time.ZoneOffset
+import java.time.Clock
 import java.time.ZonedDateTime
 
+class JwtTokenGenerator @Inject constructor(
+    private val systemClock: Clock,
+    private val uuidGenerator: UuidGenerator,
+    private val userDatabaseChecker: UserDatabaseChecker
+) {
 
-class JwtTokenGenerator {
+    fun generateToken(user: User): String {
+        if (!userDatabaseChecker.userExist(user.username, user.password)) {
+            throw IllegalStateException("User not found, please check username or password")
+        }
 
-    fun generateToken(): String {
-        // Build an HMAC signer using a SHA-256 hash
-        // Build an HMAC signer using a SHA-256 hash
-        val signer: Signer = HMACSigner.newSHA512Signer("too many secrets")
+        val signer: Signer =
+            HMACSigner.newSHA512Signer("too many secrets") // FIXME [Szymczuch] encrypt and extract to configuration properties
 
-// Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and expiration(exp)
-
-// Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and expiration(exp)
-        val currentTime = ZonedDateTime.now(ZoneOffset.UTC)
+        val currentTime = ZonedDateTime.now(systemClock)
         val jwt = JWT()
-            .setIssuer("localhost")
+            .setIssuer("localhost") // FIXME [Szymczuch] extract to config file
             .setIssuedAt(currentTime)
             .setExpiration(currentTime.plusMinutes(2))
-            .setSubject("f1e33ab3-027f-47c5-bb07-8dd8ab37a2d3")
-            .addClaim("user", "Admin")
+            .setSubject(uuidGenerator.generate())
+            .addClaim(USER_CLAIM_NAME, user.username)
 
-// Sign and encode the JWT to a JSON string representation
-
-// Sign and encode the JWT to a JSON string representation
-        val encodedJWT = JWT.getEncoder().encode(jwt, signer)
-        return encodedJWT
+        return JWT.getEncoder().encode(jwt, signer)
     }
 }
