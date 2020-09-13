@@ -1,11 +1,12 @@
 package com.codefun
 
-import io.ktor.features.NotFoundException
+import io.ktor.features.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 interface UserRepository {
     fun findUser(username: String, password: String): User
+    fun userExist(username: String): Boolean
 }
 
 typealias UserNotFound = NotFoundException
@@ -35,6 +36,8 @@ internal class UserRepositoryImpl : UserRepository {
         }
         return user
     }
+
+    override fun userExist(username: String): Boolean = inMemoryDatabase.containsKey(username)
 }
 
 data class User(
