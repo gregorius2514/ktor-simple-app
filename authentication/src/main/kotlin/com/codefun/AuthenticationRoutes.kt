@@ -1,33 +1,29 @@
 package com.codefun
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.inject.Inject
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.request.receive
-import io.ktor.response.respondText
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.application.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 class AuthenticationRoutes @Inject constructor(
     application: Application,
-    jwtTokenGenerator: JwtTokenGenerator
+    private val jwtTokenGenerator: JwtTokenGenerator,
+    @AuthenticationAnnotation private val objectMapper: ObjectMapper
+
 ) {
     init {
         application.routing {
             post("/auth") {
                 // FIXME [Szymczuch] https://ktor.io/servers/features/content-negotiation.html
                 //      https://ktor.io/servers/calls/requests.html#receiving
-                val user = call.receive(User::class)
+                val user = call.receive(String::class).let { objectMapper.readValue(it, User::class.java) }
 
                 call.respondText {
-                    jwtTokenGenerator.generateToken()
+                    jwtTokenGenerator.generateToken(user)
                 }
             }
         }
     }
 }
-
-data class User(
-    val username: String,
-    val password: String
-)
